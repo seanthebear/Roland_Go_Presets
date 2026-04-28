@@ -137,7 +137,8 @@ select:focus  { border-color: var(--accent); }
   letter-spacing: 0.06em;
 }
 
-#help-btn {
+#help-btn,
+#help-btn-2 {
   height: 24px;
   padding: 0 10px;
   border-radius: 12px;
@@ -155,7 +156,8 @@ select:focus  { border-color: var(--accent); }
   font-family: inherit;
   letter-spacing: 0.03em;
 }
-#help-btn:hover { background: var(--accent); color: var(--bg); }
+#help-btn:hover,
+#help-btn-2:hover { background: var(--accent); color: var(--bg); }
 
 /* ── Now playing bar ───────────────────────────────────────── */
 #now-playing {
