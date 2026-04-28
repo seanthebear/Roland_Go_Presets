@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Roland GO: Preset Browser</title>
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+
+  <header id="app-header">
+    <div class="header-left">
+      <span class="brand">Roland GO</span>
+      <span class="brand-sub">Preset Browser</span>
+    </div>
+    <div class="header-right">
+      <div class="midi-indicator" id="midi-indicator" data-state="init">
+        <span class="midi-dot"></span>
+        <span id="midi-status-text">Initialising…</span>
+      </div>
+      <select id="output-select" title="MIDI output device" aria-label="MIDI output device">
+        <option value="">No MIDI outputs</option>
+      </select>
+      <label class="channel-label" for="channel-select">Ch</label>
+      <select id="channel-select" title="MIDI channel" aria-label="MIDI channel">
+        <option value="1" selected>1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+        <option value="13">13</option>
+        <option value="14">14</option>
+        <option value="15">15</option>
+        <option value="16">16</option>
+      </select>
+    </div>
+  </header>
+
+  <nav id="category-bar" aria-label="Categories">
+    <div id="category-grid"></div>
+  </nav>
+
+  <main id="main">
+    <div id="toolbar">
+      <input
+        id="search"
+        type="search"
+        placeholder="Search presets…"
+        autocomplete="off"
+        spellcheck="false"
+        aria-label="Search presets"
+      />
+      <span id="preset-count" aria-live="polite"></span>
+    </div>
+
+    <div id="preset-list" role="list" aria-label="Preset list"></div>
+
+    <div id="no-results" hidden>No presets match your search.</div>
+  </main>
+
+  <footer id="app-footer">
+    <span>
+      Preset data: <a href="https://github.com/waldt/goplus" target="_blank" rel="noopener">goplus</a>
+      by Jaan Angerpikk — Apache 2.0
+    </span>
+  </footer>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

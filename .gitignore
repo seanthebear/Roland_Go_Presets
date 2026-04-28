@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+
+# Vite build output
+app/dist/
+
+# Vite cache
+app/.vite/
+
+# macOS
+.DS_Store
+
+# Editor
+.vscode/settings.json
+*.swp
+
+# Copilot repo memory — local only, not for version control
+.github/copilot-instructions.md
