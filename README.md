@@ -1,66 +1,40 @@
-# Roland GO: Presets — TouchOSC Templates
+# Roland GO: Hidden Preset Browser
 
-## Credits & Inspiration
+A web app that connects to a Roland GO:PIANO or GO:KEYS over USB or Bluetooth and lets you browse and trigger over a thousand hidden presets not exposed in the keyboard's own UI. No drivers, no DAW, no additional software — just a browser.
 
-This project would not exist without the pioneering work of:
+> **⚠️ Browser requirement:** This app uses the **Web MIDI API**, which is only supported in **Chrome and Edge** (desktop). It will not work in Firefox, Safari, or any mobile browser on iPhone/iPad. If nothing happens when you open the app, check your browser first.
 
-- **Jaan Angerpikk** (GitHub: [waldt](https://github.com/waldt), Reddit: u/Extra_Ad_655) — Original discoverer of the hidden Juno-DS-style synth engine inside Roland GO:PIANO and GO:KEYS hardware. Creator of the [GO:Plus](https://github.com/waldt/goplus) Python tool and TouchOSC templates that first demonstrated practical access to these hidden capabilities.
-
-- **dctucker** — For the [roland-junods](https://github.com/dctucker/roland-junods) project and Juno-DS memory map, which provided crucial reference data for understanding the shared synth architecture.
-
-The spark for this project came from the r/synthesizers thread ["Your 'Beginner' Roland Might Be Hiding a SERIOUS Synth Engine"](https://www.reddit.com/r/synthesizers/comments/1bkbn0n/your_beginner_roland_might_be_hiding_a_serious/) (March 2024), which brought this discovery to the wider community.
+> Tested on macOS Sonoma + Chrome.
 
 ---
 
-## What This Is
+## Requirements
 
-Roland's GO:PIANO and GO:KEYS keyboards ship with a small number of exposed sounds, but the underlying synth engine — closely related to the Roland Juno-DS — contains well over a thousand additional patches accessible via standard MIDI bank select and program change commands. They're present in every unit; Roland simply doesn't surface them in the UI.
-
-This repo provides tools to access them properly.
+- **Node.js ≥ 18** — [download from nodejs.org](https://nodejs.org) (choose the LTS version). npm is included.
+- **Chrome** or **Edge** — Web MIDI is not supported in Firefox or Safari
+- **Git** — [download from git-scm.com](https://git-scm.com) if you don't have it
 
 ---
 
-## Part 1 — Preset Browser (Web App)
+## Getting started
 
-A browser-based (or locally hosted) interface that connects directly to a Roland GO series keyboard over **USB MIDI** or **Bluetooth MIDI** and lets you browse and trigger the full hidden preset library without any additional software.
+### 1. Install the requirements above if you haven't already
 
-### Goals
+After installing Node.js, open a terminal and check it worked:
 
-- Connect to the keyboard via the Web MIDI API (USB) or Web Bluetooth MIDI, with no drivers or DAW required
-- Browse the full preset list by category, name, or bank (MSB/LSB/PC values)
-- Send the correct bank select + program change sequence to instantly audition any preset
-- Provide a UI that feels good — fast, tactile, more like a hardware panel than a settings screen
-- Work equally well hosted on a web server or run locally from a file
+```bash
+node --version   # should print v18 or higher
+npm --version
+```
 
-### What we're _not_ spending time on
+### 2. Clone the repository
 
-The MIDI command logic itself is straightforward — the patch list is known and the protocol is standard. The real work here is the interface: layout, navigation, search, favourites, and making it feel like a proper instrument tool rather than a developer utility.
+```bash
+git clone https://github.com/seanthebear/Roland_Go_Presets.git
+cd Roland_Go_Presets
+```
 
-### Tested on
-
-macOS Sonoma + Chrome. USB and Bluetooth MIDI both confirmed working.
-
-### Connecting your keyboard
-
-**USB**
-Plug in and skip to the browser step — it appears automatically.
-
-**Bluetooth MIDI (macOS)**
-
-macOS Ventura/Sonoma removed the BLE MIDI pairing UI from Audio MIDI Setup. You need a helper app to register the device with Core MIDI:
-
-1. Install **[Bluetooth MIDI Connect](https://apps.apple.com/app/bluetooth-midi-connect/id1108321878)** (free, Mac App Store) — a small utility by Mathieu Routhier purpose-built for this.
-2. Open the app, find your Roland GO in the list, click **Connect**.
-3. The keyboard is now registered as a Core MIDI port system-wide — no further configuration needed.
-
-> The macOS Bluetooth settings panel won't show BLE MIDI devices. That's normal — use Bluetooth MIDI Connect instead.
-
-**In the browser**
-Open the app, allow MIDI access when prompted. Your keyboard appears in the output dropdown (top-right). Select it, select the MIDI channel (default 1), then click any preset row to send it to the keyboard.
-
-### Setup
-
-> Requires **Node.js ≥ 18** and **npm**. The app must be served (not opened as a file) because Web MIDI requires a secure context — `localhost` qualifies.
+### 3. Install dependencies and start the app
 
 ```bash
 cd app
@@ -68,34 +42,97 @@ npm install
 npm run dev
 ```
 
-Then open `http://localhost:5173` in **Chrome** or **Edge** (Web MIDI is not supported in Firefox or Safari).
-
-To refresh the preset data from the upstream [goplus](https://github.com/waldt/goplus) source:
-
-```bash
-cd app
-npm run generate-presets
-```
-
-### Build for static hosting
-
-```bash
-cd app
-npm run build   # output in app/dist/
-```
-
-Drop the `dist/` folder on any static host (GitHub Pages, Netlify, etc.).
+Open `http://localhost:5173` in Chrome or Edge.
 
 ---
 
-## Part 2
+## Connecting your keyboard
 
-_To be defined — likely patch editing and/or performance/split/layer configuration._
+### USB
+
+Plug the keyboard in, then open the app. It will appear automatically in the MIDI output dropdown.
+
+### Bluetooth (macOS)
+
+macOS Ventura/Sonoma no longer includes a BLE MIDI pairing UI in Audio MIDI Setup. You need a helper app that connects BLE MIDI devices into Core MIDI — any app that does this will work. The one used during development is:
+
+**[Bluetooth MIDI Connect](https://apps.apple.com/app/bluetooth-midi-connect/id1108321878)** (free, Mac App Store)
+
+1. Install and open it
+2. Find your Roland GO in the list, click **Connect**
+3. Open the browser app — the keyboard will appear in the output dropdown
+
+> Note: BLE MIDI devices don't appear in the macOS Bluetooth settings panel — that's normal. You only need to do this pairing step once; macOS remembers it.
 
 ---
 
-## Attribution & Licensing
+## Using the app
 
-The GO:Plus project by Jaan Angerpikk is licensed under the [Apache License 2.0](https://github.com/waldt/goplus/blob/main/LICENSE). Where any content in this repository derives from that work, the Apache 2.0 copyright notice and attribution apply.
+1. Select your keyboard from the **output dropdown** (top right)
+2. Set the **MIDI channel** if needed (default is 1)
+3. Click a **category** to filter, or use the **search box** to find a preset by name
+4. **Click any preset row** to send it to the keyboard instantly
 
-Patch and sound data accessed by these templates is based on the Roland Juno-DS Parameter Guide, © Roland Corporation. This project uses only standard MIDI protocol (bank select + program change) to communicate with hardware you own — no firmware modification or circumvention is involved.
+---
+
+## TouchOSC Templates
+
+_Notes to follow — work in progress._
+
+---
+
+## What's planned for V2
+
+The current app only uses a small part of what the MIDI protocol and the GO's underlying Juno-DS engine can do. The three numbers (MSB/LSB/PC) just select a patch — everything about how it sounds can be shaped further in real time.
+
+**Real-time sound control (standard MIDI — expected to work)**
+
+These are General MIDI controllers the Juno-DS engine almost certainly responds to:
+
+| Control | CC | What it does |
+|---|---|---|
+| Reverb depth | 91 | How much reverb on the current patch |
+| Chorus depth | 93 | Chorus/ensemble effect amount |
+| Filter cutoff | 74 | Brightness — open/close the filter |
+| Filter resonance | 71 | Adds edge/bite to the filter |
+| Attack | 73 | How fast the sound fades in |
+| Release | 72 | How long it rings after you release |
+| Volume | 7 | MIDI channel volume |
+| Pan | 10 | Stereo position |
+| Modulation | 1 | Vibrato/modulation depth |
+
+V2 will add a row of sliders for these beneath the preset list, plus a **Reset** button (`CC121 — Reset All Controllers`) to snap everything back to the patch's defaults.
+
+**Multi-timbral layering (needs testing)**
+
+MIDI supports 16 simultaneous channels, each with its own patch. The Juno-DS engine is 16-part multi-timbral. If the GO honours multiple active channels at once — which is untested — you could layer sounds (e.g. a piano on Ch1 with a pad on Ch2) or create splits across the keyboard. V2 will test this and add a layer/split UI if it works.
+
+**Deeper sound editing via SysEx (speculative)**
+
+The [roland-junods](https://github.com/dctucker/roland-junods) project mapped the Juno-DS parameter memory space. If the GO shares this address space — likely given the shared engine — it may be possible to reach individual oscillator, envelope, LFO, and multi-effects parameters for real patch editing, not just preset selection. This is exploratory and may not work, but worth investigating.
+
+**Unexplored patch banks**
+
+The current preset list covers the documented PRST bank and GO native sounds. The MSB/LSB address space is large and not fully charted — there may be additional banks yet to be discovered.
+
+**SysEx patch injection (experimental)**
+
+The most ambitious possibility: using Roland's SysEx Data Set protocol to write custom patch data directly into the keyboard's temporary tone memory. Rather than just selecting an existing preset, you would assemble the raw parameter bytes for a sound (oscillator waveform, filter settings, envelope, effects) and transmit them to the keyboard as a SysEx message — the instrument receives them and plays your custom sound immediately, without any of it needing to exist on the keyboard beforehand.
+
+This survives only until power-off (temporary memory), but it opens up things like:
+
+- Designing sounds in the browser and hearing them on the keyboard instantly
+- Interpolating between two existing presets to create hybrids
+- Storing personal patches in the app, not on the keyboard
+- Exporting and sharing patches as simple JSON
+
+The Juno-DS SysEx format is documented and the memory map is partially mapped by the dctucker project. Whether the GO honours DT1 write messages to the same addresses is unknown — this needs hardware testing. It does not modify firmware or permanent memory; everything is volatile and reverting is as simple as selecting a different preset.
+
+---
+
+## Credits
+
+- **Jaan Angerpikk** (GitHub: [waldt](https://github.com/waldt), Reddit: [u/Extra_Ad_655](https://www.reddit.com/r/synthesizers/comments/1bkbn0n/your_beginner_roland_might_be_hiding_a_serious/)) — original discoverer of the hidden synth engine in the Roland GO series and creator of the [GO:Plus](https://github.com/waldt/goplus) tool that first mapped the full preset list. The preset data in this app is derived from that work (Apache 2.0).
+- **dctucker** — [roland-junods](https://github.com/dctucker/roland-junods) Juno-DS memory map reference.
+
+This project uses only standard MIDI protocol (bank select + program change) to communicate with hardware you own — no firmware modification or circumvention is involved.

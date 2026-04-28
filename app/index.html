@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Roland GO: Preset Browser</title>
   <link rel="stylesheet" href="/src/style.css" />
+  <!-- Google AdSense — replace ca-pub-XXXXXXXXXXXXXXXX with your publisher ID -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -12,6 +14,7 @@
     <div class="header-left">
       <span class="brand">Roland GO</span>
       <span class="brand-sub">Preset Browser</span>
+      <button id="help-btn" class="help-trigger" aria-label="How to use this app">? How to use</button>
     </div>
     <div class="header-right">
       <div class="midi-indicator" id="midi-indicator" data-state="init">
@@ -40,12 +43,31 @@
         <option value="15">15</option>
         <option value="16">16</option>
       </select>
+      <button id="help-btn-2" class="help-trigger" aria-label="How to use this app">? How to use</button>
     </div>
   </header>
+
+  <div id="now-playing" data-active="false">
+    <span class="np-label">Now playing</span>
+    <span id="np-name">—</span>
+    <span id="np-cat"></span>
+    <span id="np-addr"></span>
+  </div>
 
   <nav id="category-bar" aria-label="Categories">
     <div id="category-grid"></div>
   </nav>
+
+  <div id="ad-slot">
+    <!-- Replace data-ad-slot value with your AdSense ad slot ID -->
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+         data-ad-slot="XXXXXXXXXX"
+         data-ad-format="horizontal"
+         data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
 
   <main id="main">
     <div id="toolbar">
@@ -66,6 +88,7 @@
   </main>
 
   <footer id="app-footer">
+    <span class="footer-disclaimer">Not affiliated with or endorsed by Roland Corporation. Roland, GO:PIANO, GO:KEYS and GO:PIANO 88 are trademarks of Roland Corporation.</span>
     <span>
       Preset data: <a href="https://github.com/waldt/goplus" target="_blank" rel="noopener">goplus</a>
       by Jaan Angerpikk — Apache 2.0
@@ -73,5 +96,85 @@
   </footer>
 
   <script type="module" src="/src/main.js"></script>
-</body>
+
+  <!-- ── Help panel ─────────────────────────────────────── -->
+  <div id="help-overlay" hidden aria-modal="true" role="dialog" aria-label="Help">
+    <div id="help-panel">
+      <div id="help-header">
+        <span>Help &amp; How To</span>
+        <button id="help-close" aria-label="Close help">&times;</button>
+      </div>
+      <div id="help-body">
+
+        <p class="help-disclaimer">This is an independent community project — not affiliated with, endorsed by, or sponsored by Roland Corporation. Roland, GO:PIANO, GO:KEYS and GO:PIANO 88 are trademarks of Roland Corporation.</p>
+
+        <h2>What is this?</h2>
+        <p>Roland GO:PIANO and GO:KEYS keyboards contain over a thousand sounds that aren't accessible through the keyboard's standard controls. This app connects directly to your keyboard and lets you browse and trigger all of them — instantly, with no extra software.</p>
+
+        <h2>Compatible hardware</h2>
+        <p>Confirmed working:</p>
+        <ul>
+          <li><strong>Roland GO:PIANO</strong> (GO-61P)</li>
+          <li><strong>Roland GO:KEYS</strong> (GO-61K)</li>
+        </ul>
+        <p>Likely compatible (same underlying engine, untested):</p>
+        <ul>
+          <li>Roland GO:PIANO 88 (GO-88P)</li>
+        </ul>
+        <p>This app sends standard MIDI bank select and program change messages. It will not harm your keyboard and is completely reversible — switching the keyboard off or selecting a preset normally returns everything to its default state.</p>
+
+        <h2>Browser requirements</h2>
+        <p>You must use <strong>Chrome</strong> or <strong>Edge</strong> on a desktop or laptop. Web MIDI is not supported in Firefox or Safari, and does not work on iPhone or iPad.</p>
+        <p>Android phones running Chrome can connect via USB (with an OTG adapter) or Bluetooth.</p>
+
+        <h2>Connecting via USB</h2>
+        <ol>
+          <li>Connect your Roland GO to your computer using a USB cable.</li>
+          <li>Open this app in Chrome or Edge.</li>
+          <li>When prompted, click <strong>Allow</strong> to grant MIDI access.</li>
+          <li>Your keyboard will appear automatically in the <strong>output dropdown</strong> in the top right.</li>
+        </ol>
+
+        <h2>Connecting via Bluetooth</h2>
+        <ol>
+          <li>Put your Roland GO into Bluetooth pairing mode (hold the Bluetooth button until it flashes).</li>
+          <li>On macOS, open <strong>Audio MIDI Setup</strong> and connect via the Bluetooth panel — or use a dedicated app such as <strong>Bluetooth MIDI Connect</strong> (free, Mac App Store). Any app that registers BLE MIDI devices with Core MIDI will work.</li>
+          <li>Once connected in that app, refresh this page — the keyboard will appear in the output dropdown.</li>
+        </ol>
+        <p>Note: BLE MIDI devices do not appear in the standard macOS Bluetooth settings panel. That is normal.</p>
+
+        <h2>The MIDI indicator</h2>
+        <ul>
+          <li><span class="help-dot connected"></span> <strong>Green</strong> — keyboard connected and ready</li>
+          <li><span class="help-dot no-device"></span> <strong>Yellow</strong> — MIDI access granted but no device found. Check your connection.</li>
+          <li><span class="help-dot denied"></span> <strong>Red</strong> — MIDI access was denied, or this browser does not support Web MIDI. Use Chrome or Edge and click Allow when prompted.</li>
+        </ul>
+
+        <h2>Choosing a MIDI channel</h2>
+        <p>The <strong>Ch</strong> selector sets which MIDI channel the app sends on. In most cases, leave this at <strong>1</strong> — that is the default receive channel on the Roland GO.</p>
+        <p>MIDI has 16 channels (1–16). Each channel can carry independent note and control data. The Roland GO listens on channel 1 by default. You would only need to change this if you have configured the keyboard to receive on a different channel, or if you are using a MIDI interface that routes channels differently.</p>
+
+        <h2>Browsing presets</h2>
+        <ul>
+          <li>Click a <strong>category button</strong> (PNO, EP, ORG…) to filter the list to that sound type. Click <strong>ALL</strong> to show everything.</li>
+          <li>Use the <strong>search box</strong> to find a preset by name. Search works within the selected category.</li>
+          <li>The number on the right of each category button shows how many presets are in that category.</li>
+        </ul>
+
+        <h2>Playing a preset</h2>
+        <p>Click any row in the preset list. The app immediately sends the correct MIDI commands to your keyboard, which will switch to that sound. The row highlights green and the <strong>Now playing</strong> bar at the top updates to show the active preset.</p>
+        <p>The three numbers shown next to each preset name (e.g. <code>87·64·1</code>) are the raw MIDI addresses — MSB, LSB, and Program Change number. These are shown for reference; you do not need to do anything with them.</p>
+
+        <h2>Nothing is happening when I click</h2>
+        <ul>
+          <li>Check the MIDI indicator is green. If it is yellow or red, the keyboard is not connected.</li>
+          <li>Make sure the correct device is selected in the output dropdown.</li>
+          <li>Make sure the keyboard is powered on and not in a menu or settings screen.</li>
+          <li>Try MIDI channel 1 if you have changed it.</li>
+          <li><strong>Check that the keyboard isn't already connected to another device</strong> — a tablet, phone, or computer that connected to it first will hold the Bluetooth link. The Roland GO can only be connected to one device at a time. Disconnect it from the other device (or turn Bluetooth off on that device) and then reconnect here.</li>
+        </ul>
+
+      </div>
+    </div>
+  </div>
 </html>

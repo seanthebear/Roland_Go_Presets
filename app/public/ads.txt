@@ -1,0 +1,5 @@
+# ads.txt — required by Google AdSense
+# Replace with the line provided in your AdSense account under
+# Sites > Your site > ads.txt tab
+# Format: google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0

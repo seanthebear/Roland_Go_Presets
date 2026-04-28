@@ -16,3 +16,7 @@ app/.vite/
 
 # Copilot repo memory — local only, not for version control
 .github/copilot-instructions.md
+
+# Private working notes — not for public repo
+NOTES.md
+HACKADAY_PITCH.md

@@ -2,12 +2,13 @@ import { CATEGORIES, PRESETS } from './data/presets.js';
 
 // ── State ────────────────────────────────────────────────────
 const state = {
-  midiAccess: null,
-  output:     null,
-  channel:    1,       // 1-based MIDI channel
-  selectedCat: null,   // null = "All"
-  search:     '',
-  lastPlayed: null,    // DOM element for .playing highlight
+  midiAccess:   null,
+  output:       null,
+  channel:      1,       // 1-based MIDI channel
+  selectedCat:  null,    // null = "All"
+  search:       '',
+  lastPlayed:   null,    // DOM element for .playing highlight
+  activePreset: null,    // [name, cat, msb, lsb, pc]
 };
 
 // ── DOM refs ─────────────────────────────────────────────────
@@ -22,6 +23,14 @@ const el = {
   presetCount: $('preset-count'),
   search:      $('search'),
   noResults:   $('no-results'),
+  nowPlaying:  $('now-playing'),
+  npName:      $('np-name'),
+  npCat:       $('np-cat'),
+  npAddr:      $('np-addr'),
+  helpBtn:     $('help-btn'),
+  helpOverlay: $('help-overlay'),
+  helpClose:   $('help-close'),
+  helpTriggers: document.querySelectorAll('.help-trigger'),
 };
 
 // ── MIDI ─────────────────────────────────────────────────────
@@ -152,6 +161,7 @@ function renderPresets() {
     row.addEventListener('click', () => {
       sendPreset(msb, lsb, pc);
       highlightRow(row);
+      setActivePreset([name, cat, msb, lsb, pc]);
     });
 
     prevLsb = lsb;
@@ -165,9 +175,16 @@ function highlightRow(row) {
   if (state.lastPlayed) state.lastPlayed.classList.remove('playing');
   row.classList.add('playing');
   state.lastPlayed = row;
-  // Flash animation
   row.classList.add('send-flash');
   row.addEventListener('animationend', () => row.classList.remove('send-flash'), { once: true });
+}
+
+function setActivePreset([name, cat, msb, lsb, pc]) {
+  state.activePreset = [name, cat, msb, lsb, pc];
+  el.npName.textContent  = name;
+  el.npCat.textContent   = cat;
+  el.npAddr.textContent  = `${msb}·${lsb}·${pc}`;
+  el.nowPlaying.dataset.active = 'true';
 }
 
 // ── Full render ──────────────────────────────────────────────
@@ -207,6 +224,24 @@ el.search.addEventListener('keydown', e => {
     renderPresets();
     el.search.blur();
   }
+});
+
+// ── Help panel ───────────────────────────────────────────────
+function openHelp() {
+  el.helpOverlay.hidden = false;
+  el.helpClose.focus();
+}
+function closeHelp() {
+  el.helpOverlay.hidden = true;
+  el.helpBtn.focus();
+}
+el.helpTriggers.forEach(btn => btn.addEventListener('click', openHelp));
+el.helpClose.addEventListener('click', closeHelp);
+el.helpOverlay.addEventListener('click', e => {
+  if (e.target === el.helpOverlay) closeHelp();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && !el.helpOverlay.hidden) closeHelp();
 });
 
 // ── Utility ──────────────────────────────────────────────────
