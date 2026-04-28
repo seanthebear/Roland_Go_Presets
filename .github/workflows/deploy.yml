@@ -37,7 +37,7 @@ jobs:
         working-directory: app
 
       - name: Build
-        run: npm run build -- --base=/Roland_Go_Presets/
+        run: npm run build -- --base=/
         working-directory: app
 
       - uses: actions/configure-pages@v4
